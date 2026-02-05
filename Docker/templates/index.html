@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Logo Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lightbox.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/controls.css') }}">
+</head>
+<body>
+    <div id="theme-switcher">🌗</div>
+    <div id="mobile-menu-overlay" class="hidden"></div>
+    <div id="toast">✅ Action Successful</div>
+    
+    <div class="main-container">
+
+        <div id="artist-sidebar">
+            <div id="artist-search-container">
+                <input type="text" id="artist-search" placeholder="Search artists..." onkeyup="filterArtists()">
+                <div class="sidebar-tools">
+                    <label><input type="checkbox" id="select-all" onchange="selectAllArtists(this.checked)"> Select All</label>
+                    <button id="filter-status-btn" class="filter-btn">Show All</button>
+                </div>
+                <div id="bulk-actions" style="margin-top:10px; display: flex; gap: 10px;">
+                    <button id="bulk-apply-fanart" onclick="applyMostPopularFanart()" style="display:none; width: 100%;">Apply Most Popular Fanart</button>
+                    <button id="bulk-toggle-status" onclick="bulkToggleStatus()" style="display:none; width: 100%;">Toggle Status</button>
+                </div>
+            </div>
+            <div id="artist-list">
+                {% for a in artists %}
+                <div class="artist-item" id="item-{{ a.obj.ratingKey }}" data-name="{{ a.obj.title }}" data-status="{{ a.status }}" onclick="loadArtist('{{ a.obj.ratingKey }}', '{{ a.obj.title }}')">
+                    <input type="checkbox" class="artist-checkbox" data-key="{{ a.obj.ratingKey }}" onclick="handleSelection(event, '{{ a.obj.ratingKey }}')">
+                    <span class="artist-name">{{ a.obj.title }}</span>
+                    <button class="status-dot status-{{ a.status }}" onclick="toggleStatus(event, '{{ a.obj.ratingKey }}')"></button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="editor">
+            <div id="editor-header">
+                <button id="menu-toggle">☰</button>
+                <h2 id="current-artist">Select an Artist to Begin</h2>
+            </div>
+
+            <div class="panel preview-panel">
+                <div class="section-buttons">
+                    <button class="section-btn section-title" onclick="toggleExclusive('fanart-controls')">fanart.tv</button>
+                    <button class="section-btn section-title" onclick="toggleExclusive('controls-panel')">Text<br/>Generator</button>
+                </div>
+
+                <div class="compare-box">
+                    <div>
+                            <div class="img-container"><img id="plex-img" src=""/></div>
+                            <div style="font-size:11px; margin-top:8px; text-transform: uppercase; letter-spacing: 1px; text-align:center;">Current</div>
+                        </div>
+                        <div>
+                            <div class="img-container" id="preview-container">
+                                <div id="preview-overlay" class="preview-overlay"></div>
+                                <img id="preview-img" src=""/>
+                            </div>
+                            <div style="font-size:11px; margin-top:8px; text-transform: uppercase; letter-spacing: 1px; text-align:center;">Preview</div>
+                        </div>
+                </div>
+            </div>
+
+            <!-- Lightbox for larger current image preview -->
+            <div id="lightbox" class="hidden" onclick="closeLightbox(event)">
+                <div class="lightbox-inner" onclick="event.stopPropagation()">
+                    <div class="lightbox-side">
+                        <div id="lightbox-thumbs" class="lightbox-thumbs"></div>
+                    </div>
+                    <div class="lightbox-main">
+                        <div class="lb-controls">
+                            <button class="btn" id="lb-prev" onclick="lightboxPrev()">Prev</button>
+                            <button class="btn" id="lb-next" onclick="lightboxNext()">Next</button>
+                            <button class="btn primary" id="lb-use" onclick="saveFromLightbox()">Use as artist image</button>
+                            <button class="btn" id="lb-close" onclick="closeLightbox()">Close</button>
+                        </div>
+                        <div class="lightbox-view"><img id="lightbox-img" src="" alt="Large preview" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fanart-controls" class="hidden panel">
+                <div class="controls panel" style="grid-template-columns: 1fr; gap: 15px; margin-top: 0; padding: 18px;">
+                    <div class="control-group">
+                        <h4>Image Tools</h4>
+                        <div style="display:flex; gap:10px; flex-wrap: wrap; margin-bottom:10px;">
+                            <button id="btn-invert" class="font-btn">Invert</button>
+                            <button id="btn-monochrome" class="font-btn">Greyscale</button>
+                        </div>
+                        <h4>Colourise</h4>
+                        <div class="color-grid" id="image-color-picker"></div>
+                        <div style="margin:10px 0;">
+                            <label><input type="checkbox" id="apply-default-size" checked onchange="toggleZoom(this)"> Apply Default Size</label>
+                        </div>
+                        <div style="margin:10px 0;">
+                            Zoom: <input type="range" id="zoom" min="0.5" max="3" value="1" step="0.1" oninput="updateCSS()" disabled>
+                        </div>
+                        <div style="margin:10px 0;">
+                            Contrast: <input type="range" id="contrast" min="0" max="3" value="1" step="0.1" oninput="updateCSS()">
+                        </div>
+                        <div style="display:flex; gap:10px; margin-top:10px;">
+                            <button onclick="document.getElementById('manual-upload-2').click()" style="flex:1">Upload Image</button>
+                            <button onclick="resetFilters()" style="flex:1">Reset</button>
+                        </div>
+                        <input type="file" id="manual-upload-2" style="display:none" onchange="handleUpload(this)">
+                    </div>
+                    <div>
+                        <button onclick="save()" style="width:100%; background:var(--state-success); color:white;">save logo</button>
+                    </div>
+                </div>
+
+                <div class="fanart-panel panel">
+                    <div id="fanart-pagination" class="pagination-controls"></div>
+                    <div id="options-grid" class="logo-grid"></div>
+                </div>
+            </div>
+
+            <div class="controls" id="controls-panel" style="display:none;">
+                <div class="control-group" style="grid-column: span 2;">
+                    <div class="text-generator-grid">
+                        <div>
+                            <h4>Options</h4>
+                            <div style="margin:10px 0;">
+                                <!-- Row count selector removed in favor of inline row buttons -->
+                            </div>
+                            <div style="display:flex; gap:5px; margin-bottom:10px;">
+                                <button class="font-btn case-btn" onclick="setCase('upper')" style="flex:1">UPPER</button>
+                                <button class="font-btn case-btn" onclick="setCase('lower')" style="flex:1; text-transform: lowercase;">lower</button>
+                                <button class="font-btn case-btn" onclick="setCase('none')" style="flex:1; text-transform: capitalize;">Mixed</button>
+                            </div>
+                                <div class="rows-and-colors">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div style="min-width:48px; font-size:0.95em; font-weight:600;">Rows:</div>
+                                        <div class="row-buttons">
+                                            <button class="row-btn" onclick="setRows(1)">1</button>
+                                            <button class="row-btn" onclick="setRows(2)">2</button>
+                                            <button class="row-btn" onclick="setRows(3)">3</button>
+                                            <button class="row-btn" onclick="setRows(4)">4</button>
+                                        </div>
+                                    </div>
+                                    <div style="flex:1">
+                                        <div class="color-grid" id="color-picker"></div>
+                                    </div>
+                                </div>
+                            <input type="hidden" id="row-count" value="1">
+                        </div>
+                        <div>
+                            <h4>Font</h4>
+                            <div id="default-fonts">
+                                {% for font in fonts %}
+                                    <button class="font-btn" onclick="selectFont('{{ font }}')">{{ font }}</button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="grid-column: span 2; display:flex; gap:10px;">
+                    <button onclick="saveCustom()" style="flex:1; background:var(--btn-secondary-bg); color:var(--btn-secondary-text);">Save Text Logo</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/colorpicker.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preview.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lightbox.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+#menu-toggle {
+    display: none; /* Hidden on desktop */
+    font-size: 1.5em;
+    background: transparent;
+    border: none;
+    color: var(--base-text);
+    padding: 5px;
+}
+
+.filter-btn {
+    padding: 5px 10px;
+    font-size: 0.9em;
+    border-radius: 6px;
+    border: 1px solid var(--base-border);
+    background: var(--controls-bg);
+    color: var(--base-text);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    border-color: var(--base-accent);
+}
+
+.filter-btn.status-done { background: var(--state-success); color: white; border-color: transparent; }
+.filter-btn.status-custom { background: var(--btn-secondary-bg); color: white; border-color: transparent; }
+.filter-btn.status-none { background: var(--state-danger); color: white; border-color: transparent; }
+
+/* Font / tool buttons (restored from original consolidated stylesheet) */
+.font-btn {
+        background: var(--controls-bg);
+        color: var(--base-text);
+        border: 1px solid var(--base-border);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.85em;
+        cursor: pointer;
+        transition: all 0.2s;
+}
+
+.font-btn:hover {
+        background: var(--sidebar-hover-bg);
+        border-color: var(--base-accent);
+}
+
+.font-btn.active {
+        background: var(--base-accent);
+        color: white;
+        border-color: var(--base-accent);
+}
+
+.row-btn {
+    background: var(--controls-bg);
+    color: var(--base-text);
+    border: 1px solid var(--base-border);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+.row-btn.active {
+    background: var(--base-accent);
+    color: white;
+    border-color: var(--base-accent);
+}
+
+/* Section header buttons */
+.section-btn {
+    background: var(--controls-bg);
+    color: var(--base-text);
+    border: 1px solid var(--base-border);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 1.0em;
+    cursor: pointer;
+    transition: all 0.15s;
+    min-width: 140px;
+    text-align: left;
+}
+
+.section-btn:hover {
+    background: var(--sidebar-hover-bg);
+    border-color: var(--base-accent);
+}
+
+.section-btn.active {
+    background: var(--base-accent);
+    color: white;
+    border-color: var(--base-accent);
+}
+
+/* Mobile sidebar / hamburger behaviour */
+@media (max-width: 900px) {
+    #menu-toggle { display: inline-block; }
+
+    /* Make sidebar off-canvas by default on mobile */
+    #artist-sidebar {
+        position: fixed;
+        left: -360px;
+        top: 0;
+        bottom: 0;
+        width: 320px;
+        z-index: 1100;
+        transition: left 0.25s ease;
+        box-shadow: 2px 0 12px rgba(0,0,0,0.3);
+    }
+
+    /* When visible, slide into view */
+    #artist-sidebar.sidebar-visible {
+        left: 0;
+    }
+
+    /* Ensure main layout doesn't overflow when sidebar visible */
+    .main-container { overflow: hidden; }
+
+    /* Mobile overlay backdrop */
+    #mobile-menu-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 1050;
+    }
+}
+
+/* Small-screen improvements for main content */
+@media (max-width: 900px) {
+    /* Reduce editor padding to suit narrow viewports */
+    #editor { padding: 12px; }
+
+    /* Panels should be full width and have smaller margins */
+    .panel { margin: 10px 0; border-radius: 8px; }
+
+    /* Stack preview content vertically for narrow screens */
+    .preview-panel { flex-direction: column; gap: 12px; }
+    .preview-panel .section-buttons { width: 100%; flex-direction: row; justify-content: space-between; }
+    .compare-box { flex-direction: column; gap: 12px; }
+
+    /* Fanart controls stack under image tools */
+    #fanart-controls { grid-template-columns: 1fr; }
+    /* Stack controls columns so text generator options take full width */
+    .controls { grid-template-columns: 1fr; }
+    #fanart-controls > .controls.panel, #fanart-controls > .fanart-panel.panel { padding: 12px; }
+}
+
+/* Make text-generator options stack by default so color swatches can span full width */
+.text-generator-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+
+@media (min-width: 900px) {
+    .text-generator-grid { grid-template-columns: 3fr 7fr; gap: 20px; }
+}
+
+/* On wider screens, place the row buttons above the colour swatches in the text generator
+   and make the swatches larger to match the fanart section */
+@media (min-width: 900px) {
+    .rows-and-colors { display: flex; flex-direction: column; align-items: flex-start; }
+    .rows-and-colors > div:first-child { display: flex; width: 100%; align-items: center; gap: 8px; }
+    .rows-and-colors .row-buttons { margin-bottom: 10px; }
+    /* make both swatch pickers use the same column sizing */
+    #color-picker, #image-color-picker {
+        display: grid !important;
+        grid-auto-flow: row;
+        grid-template-columns: repeat(4, minmax(36px, 1fr)) !important;
+        grid-auto-columns: 1fr;
+        gap: 10px;
+        width: 100%;
+    }
+    .color-swatch { min-width: 36px; }
+}
+
+/* Specific color grid layouts to avoid squishing on narrow screens */
+/* make fanart image swatches match the text-generator swatches (square, 4 columns) */
+#image-color-picker {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(28px, 1fr));
+    gap: 8px;
+}
+
+#color-picker {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(28px, 1fr));
+    gap: 8px;
+}
+
+/* On narrow screens, stack the row buttons above the colour swatches */
+@media (max-width: 900px) {
+    .rows-and-colors { display: flex; flex-direction: column; align-items: flex-start; }
+    .rows-and-colors .color-grid { width: 100%; margin-top: 10px; }
+    /* Ensure the rows-and-colors wrapper and its children take full width on mobile */
+    .rows-and-colors { width: 100%; }
+    .rows-and-colors > div { width: 100%; }
+    #color-picker { grid-template-columns: repeat(4, minmax(28px, 1fr)); }
+}
+
+/* Force multi-column layout for the text-generator swatches on narrow phones */
+@media (max-width: 420px) {
+    #color-picker {
+        grid-template-columns: repeat(4, minmax(28px, 1fr));
+        gap: 8px;
+        width: 100%;
+    }
+    .rows-and-colors .color-grid { width: 100%; }
+}
+
+/* Fanart pagination buttons */
+#fanart-controls .pagination-btn {
+    padding: 6px 10px;
+    font-size: 0.85em;
+    border-radius: 6px;
+    background: var(--controls-bg);
+    border: 1px solid var(--base-border);
+    color: var(--base-text);
+    cursor: pointer;
+}
+
+#fanart-controls .pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Color swatches used by the color picker */
+.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(25px, 1fr)); gap: 10px; margin: 15px 0; }
+.color-swatch { width: 100%; aspect-ratio: 1 / 1; border-radius: 6px; cursor: pointer; border: 2px solid transparent; transition: transform 0.1s, border-color 0.2s; }
+.color-swatch:hover { transform: scale(1.1); }
+.color-swatch.active { border-color: var(--base-accent); transform: scale(1.05); }
+
+/* Toast placement (ensure last-loaded stylesheet controls position) */
+#toast {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--state-success);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    z-index: 2000;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Make row buttons match color swatch height and vertically center content */
+.row-buttons .row-btn {
+    height: 28px;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

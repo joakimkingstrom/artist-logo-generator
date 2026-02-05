@@ -1,0 +1,55 @@
+# Sans Serif
+Anton
+Raleway
+
+# Serif
+Cinzel
+Merriweather
+
+# Display
+Allerta Stencil
+Audiowide
+Caesar Dressing
+Coiny
+Fascinate Inline
+Faster One
+Frijole
+Germania One
+Gravitas One
+Honk
+Lobster
+Metal Mania
+Monoton
+Nosifer
+Orbitron
+Pirata One
+Protest Guerrilla
+Rubik Burned
+Rubik Doodle Shadow
+Rubik Glitch
+Rubik Spray Paint
+Russo One
+Rye
+Tourney
+UnifrakturMaguntia
+Workbench
+
+# Handwriting
+Alex Brush
+Allura
+Dancing Script
+Gochi Hand
+Great Vibes
+Indie Flower
+Italianno
+Mr Dafoe
+Pacifico
+Permanent Marker
+Rock Salt
+
+# Monospace
+Press Start 2P
+Special Elite
+
+# Other
+Bitcount Grid Double Ink

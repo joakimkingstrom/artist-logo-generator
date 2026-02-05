@@ -1,0 +1,24 @@
+---
+
+services:
+  plex-artist-logos:
+    build: ./Docker
+    ports:
+      - "5000:5000"
+    environment:
+      - PLEX_URL=${PLEX_URL:-http://your-ip:32400}
+      - PLEX_TOKEN=${PLEX_TOKEN}
+      - LIBRARY_NAME=Music
+      - FANART_API_KEY=${FANART_API_KEY}
+      - UPDATE_PLEX=${UPDATE_PLEX:-true}
+    volumes:
+      - ./Docker/fonts.txt:/app/fonts.txt
+      - fonts:/app/fonts
+      - data:/app/ArtistLogos
+      - logs:/app/Logs
+    restart: unless-stopped
+
+volumes:
+  fonts:
+  data:
+  logs:
