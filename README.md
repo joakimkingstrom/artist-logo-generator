@@ -5,10 +5,15 @@ A lightweight web UI and backend for browsing, editing and setting artist poster
 This repository contains a Flask backend which interfaces with Plex and provides an editor UI for applying fanart/text-based logos, previewing transformations (invert/greyscale/tint/contrast/zoom), and saving results back to Plex.
 
 ![alt text](https://github.com/joakimkingstrom/artist-logo-generator/blob/main/screenshots/SCR-20260205-uggm.png)
+*fanart.tv view*
 ![alt text](https://github.com/joakimkingstrom/artist-logo-generator/blob/main/screenshots/SCR-20260205-ugle.png)
+*browse existing artist pictures from plex with the ability to save*
 ![alt text](https://github.com/joakimkingstrom/artist-logo-generator/blob/main/screenshots/SCR-20260205-ugsl.png)
+*text generator view*
 ![alt text](https://github.com/joakimkingstrom/artist-logo-generator/blob/main/screenshots/SCR-20260205-ulxa.png)
+*plex music library*
 ![alt text](https://github.com/joakimkingstrom/artist-logo-generator/blob/main/screenshots/image.png)
+*mobile plex library with round logos*
 
 Key files
 - `Docker/` – application source and Flask app (`app.py`, `logic.py`, `plex_utils.py`) and static assets.
