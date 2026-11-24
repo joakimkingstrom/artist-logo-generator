@@ -1,3 +1,5 @@
+# This repo is now archived. For a better version of this tool, and much more, use https://github.com/joakimkingstrom/plekstender instead
+
 # Artist Logo Generator
 
 A lightweight web UI and backend for browsing, editing and setting artist posters/logos in a Plex (music) library. It uses the fanart.tv API and their HD clearLOGO's to set artist logos, and also provides an interface to create logos using fonts from Google Fonts. 
